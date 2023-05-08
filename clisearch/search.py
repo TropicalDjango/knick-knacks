@@ -25,7 +25,6 @@ if __name__ == "__main__":
     ii = 1
     search_results = []
     print(Fore.GREEN + "Google Search".center(40, "_") + Style.RESET_ALL)
-
     while True:
         print("Enter Search Term".center(40, "_"))
         query = input("->")
