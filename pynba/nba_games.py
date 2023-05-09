@@ -8,79 +8,54 @@ from colorama import Fore, Style
 
 page = requests.get("https://www.espn.com/nba/schedule")
 
-nba_teams = {
-    "Atlanta": ["#E03A3E", "#C1D32F"],
-    "Boston": ["#007A33", "#BA9653"],
-    "Brooklyn": ["#000000", "#FFFFFF"],
-    "Charlotte": ["#1D1160", "#00788C"],
-    "Chicago": ["#CE1141", "#000000"],
-    "Cleveland": ["#6F263D", "#041E42"],
-    "Dallas": ["#00538C", "#002B5E"],
-    "Denver": ["#0E2240", "#FEC524"],
-    "Detroit": ["#C8102E", "#1D42BA"],
-    "Golden State": ["#1D428A", "#FFC72C"],
-    "Houston": ["#CE1141", "#C4CED3"],
-    "Indiana": ["#002D62", "#FDBB30"],
-    "LA Clippers": ["#C8102E", "#1D428A"],
-    "LA Lakers": ["#552583", "#FDB927"],
-    "Memphis": ["#5D76A9", "#12173F"],
-    "Miami": ["#98002E", "#F9A01B"],
-    "Milwaukee": ["#00471B", "#F0EBD2"],
-    "Minnesota": ["#0C2340", "#236192"],
-    "New Orleans": ["#0C2340", "#85714D"],
-    "New York": ["#006BB6", "#F58426"],
-    "Oklahoma City": ["#007AC1", "#EF3B24"],
-    "Orlando": ["#0077C0", "#C4CED3"],
-    "Philadelphia": ["#006BB6", "#ED174C"],
-    "Phoenix": ["#1D1160", "#E56020"],
-    "Portland": ["#E03A3E", "#000000"],
-    "Sacramento": ["#5A2D81", "#63727A"],
-    "San Antonio": ["#C4CED3", "#000000"],
-    "Toronto": ["#CE1141", "#000000"],
-    "Utah": ["#002B5C", "#F9A01B"],
-    "Washington": ["#002B5C", "#E31837"]
+team_col = {
+    "Atlanta": "\033[1m\033[38;2;255;255;255;48;2;200;16;46m",
+    "Boston": "\033[1m\033[38;2;255;255;255;48;2;0;122;51m",
+    "Brooklyn": "\033[1m\033[38;2;255;255;255;48;2;0;0;0m",
+    "Charlotte": "\033[1m\033[38;2;0;120;140;48;2;29;17;96m",
+    "Chicago": "\033[1m\033[38;2;206;17;65;48;2;6;25;34m",
+    "Cleveland": "\033[1m\033[38;2;134;0;56;48;2;253;187;48m",
+    "Dallas": "\033[1m\033[38;2;0;83;188;48;2;0;43;92m",
+    "Denver": "\033[1m\033[38;2;255;198;39;48;2;13;34;64m",
+    "Detroit": "\033[1m\033[38;2;200;16;46;48;2;29;66;138m",
+    "Golden State": "\033[1m\033[38;2;255;199;44;48;2;29;66;138m",
+    "Houston": "\033[1m\033[38;2;206;17;65;48;2;6;25;34m",
+    "Indiana": "\033[1m\033[38;2;253;187;48;48;2;0;45;98m",
+    "Clippers": "\033[1m\033[38;2;0;0;0;48;2;[255;255;255]m",
+    "Los Angeles": "\033[1m\033[38;2;85;37;130;48;2;253;185;39m",
+    "Memphis": "\033[1m\033[38;2;93;118;169;48;2;18;23;63m",
+    "Miami": '\033[1m\033[38;2;152;0;26;48;2;255;255;255m',
+    "Milwaukee": "\033[1m\033[38;2;240;235;210;48;2;0;71;27m",
+    "Minnesota": "\033[1m\033[38;2;35;97;146;48;2;12;35;64m",
+    "New Orleans": "\033[1m\033[38;2;225;58;62;48;2;0;22;65m",
+    "New York": "\033[1m\033[38;2;245;132;38;48;2;0;107;182m",
+    "Oklahoma City": "\033[1m\033[38;2;239;59;36;48;2;0;125;195m",
+    "Orlando": "\033[1m\033[38;2;196;206;211;48;2;0;125;197m",
+    "Philadelphia": "\033[1m\033[38;2;237;23;76;48;2;0;43;92m",
+    "Phoenix": "\033[1m\033[38;2;229;95;32;48;2;29;17;96m",
+    "Portland": "\033[1m\033[38;2;224;58;62;48;2;6;25;34m",
+    "Sacramento": "\033[1m\033[38;2;99;113;122;48;2;91;43;130m",
+    "San Antonio": "\033[1m\033[38;2;0;0;0;48;2;196;206;211m",
+    "Toronto": "\033[1m\033[38;2;0;0;0;48;2;206;17;65m",
+    "Utah": "\033[1m\033[38;2;249;160;27;48;2;0;43;92m",
+    "Washington": "\033[1m\033[38;2;227;24;55;48;2;0;43;92m"
 }
 
-teams = {
-    "Atlanta": "#E03A3E",
-    "Boston": "#007A33",
-    "Brooklyn": "#000000",
-    "Charlotte": "#1D1160",
-    "Chicago": "#CE1141",
-    "Cleveland": "#6F263D",
-    "Dallas": "#00538C",
-    "Denver": "#0E2240",
-    "Detroit": "#C8102E",
-    "Golden State": "#1D428A",
-    "Houston": "#CE1141",
-    "Indiana": "#00275D",
-    "Clippers": "#C8102E",
-    "Lakers": "#552583",
-    "Memphis": "#5D76A9",
-    "Miami": "#98002E",
-    "Milwaukee": "#00471B",
-    "Minnesota": "#0C2340",
-    "New Orleans": "#0C2340",
-    "New York": "#006BB6",
-    "Oklahoma City": "#007AC1",
-    "Orlando": "#0077C0",
-    "Philadelphia": "#006BB6",
-    "Phoenix": "#1D1160",
-    "Portland": "#E03A3E",
-    "Sacramento": "#5A2D81",
-    "San Antonio": "#C4CED4",
-    "Toronto": "#CE1141",
-    "Utah": "#002B5C",
-    "Washington": "#002B5C"
-}
+def print_game(away, home, game_time, tv_network):
+   print("{} @ {} : {} : {}".format(team_col[away] + away + Style.RESET_ALL,
+                                    team_col[home] + home + Style.RESET_ALL,
+                                    game_time  + Style.RESET_ALL,
+                                    tv_network + Style.RESET_ALL))
 
-def todays_game():
+def week_schedule():
     tree = lxml.fromstring(page.text)
     elements = tree.find_class("ResponsiveTable")
     for element in elements:
         table = lxml.tostring(element)
         #print(lxml.tostring(element).decode('ascii'))
         day = element.find_class("Table__Title")[0].text_content()
+        
+        print('\n')
         print(day.center(40, "_"))
 
         games = element.find_class("Table__TBODY")[0]
@@ -90,9 +65,11 @@ def todays_game():
 
             home_team = single_game.find_class("colspan__col")[0].\
                                     find_class("AnchorLink")[1].text_content()
-
-            game_time = single_game.find_class("date__col")[0].\
-                                    find_class("AnchorLink")[0].text_content()
+            try:
+                game_time = single_game.find_class("date__col")[0].\
+                                        find_class("AnchorLink")[0].text_content()
+            except IndexError:
+                game_time = Fore.RED + "⚫LIVE"
 
             try:
                 tv_net = single_game.find_class("broadcast__col")[0].\
@@ -110,12 +87,12 @@ def todays_game():
 
             series_lead = single_game.find_class("events__col")[0].\
                                       find_class("gameNote")[0].text_content()
+            print_game(away_team, home_team, game_time, tv_net)
 
-            print("{} @ {} : {} : {}".format(away_team, home_team, \
-                                             game_time, tv_net))
+
 
 
 if __name__ == "__main__":
     print("Options".center(40, "_"))
     #choice = input("-> ")
-    todays_game()
+    week_schedule()
