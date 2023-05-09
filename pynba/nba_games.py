@@ -57,45 +57,52 @@ def print_game(away, home, game_time, tv_network):
 
 def week_schedule():
     tree = lxml.fromstring(page.text)
-    elements = tree.find_class("ResponsiveTable")
+    elements = tree.find_class("ScheduleTables")
     for element in elements:
-        table = lxml.tostring(element)
         #print(lxml.tostring(element).decode('ascii'))
-        day = element.find_class("Table__Title")[0].text_content()
-        
+        day = element.find_class("Table__Title")
+        if isinstance(day, list):
+            day = day[0].text_content()
+        else:
+            day = day.text_content()
+        print('\n')
         print(day.center(40, "_"))
+        for table in element.find_class("ResponsiveTable"):
+            games = table.find_class("Table__TBODY")[0]
+            for single_game in games.find_class("Table__TR--sm"):
+                away_team = single_game.find_class("events__col")[0].\
+                                        find_class("AnchorLink")[1].text_content()
 
-        games = element.find_class("Table__TBODY")[0]
-        for single_game in games.find_class("Table__TR--sm"):
-            away_team = single_game.find_class("events__col")[0].\
-                                    find_class("AnchorLink")[1].text_content()
+                home_team = single_game.find_class("colspan__col")[0].\
+                                        find_class("AnchorLink")[1].text_content()
+                try:
+                    if single_game.find_class("date__col") == []:
+                        game_or_time = single_game.find_class("teams__col")[0].\
+                                                find_class("AnchorLink")[0].text_content()
+                    else:
+                        game_or_time = single_game.find_class("date__col")[0].\
+                                                find_class("AnchorLink")[0].text_content()
+                except IndexError:
+                    game_or_time = "LIVE"
 
-            home_team = single_game.find_class("colspan__col")[0].\
-                                    find_class("AnchorLink")[1].text_content()
-            try:
-                game_time = single_game.find_class("date__col")[0].\
-                                        find_class("AnchorLink")[0].text_content()
-            except IndexError:
-                game_time = "LIVE"
-
-            try:
-                tv_net = single_game.find_class("broadcast__col")[0].\
-                                     find_class("network-name")[0].text_content()
-            except IndexError:
                 try:
                     tv_net = single_game.find_class("broadcast__col")[0].\
-                        find_class("")[0]
-                    tv_net = lxml.tostring(tv_net).decode('ascii')
-                    soup = BeautifulSoup(tv_net, 'lxml')
-                    for img_tag in soup.find_all('img'):
-                        tv_net = img_tag.get('alt')
+                                         find_class("network-name")[0].text_content()
                 except IndexError:
-                    tv_net = ""
+                    try:
+                        tv_net = single_game.find_class("broadcast__col")[0].\
+                            find_class("")[0]
+                        tv_net = lxml.tostring(tv_net).decode('ascii')
+                        soup = BeautifulSoup(tv_net, 'lxml')
+                        for img_tag in soup.find_all('img'):
+                            tv_net = img_tag.get('alt')
+                    except IndexError:
+                        tv_net = ""
 
-            series_lead = single_game.find_class("events__col")[0].\
-                                      find_class("gameNote")[0].text_content()
-            print_game(away_team, home_team, game_time, tv_net)
-        print('\n')
+                series_lead = single_game.find_class("events__col")[0].\
+                                          find_class("gameNote")[0].text_content()
+                print_game(away_team, home_team, game_or_time, tv_net)
+            print(''.center(40, '-'))
 
 
 if __name__ == "__main__":
