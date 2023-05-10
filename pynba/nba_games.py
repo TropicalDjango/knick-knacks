@@ -3,20 +3,22 @@
 import requests
 import lxml.html as lxml
 import datetime
+import readline
 from subprocess import run
 from bs4 import BeautifulSoup
 from colorama import Fore, Style
 
 """
 These are the ANSI color codes for the teams, I used
-https://teamcolorcodes.com/nba-team-color-codes/ for the RGB values
+https://teamcolorcodes.com/nba-team-color-codes/ for the RGB values I was
+going to have different colors for depending on away or home status, I haven't
+ruled it out entirely so these are still here, althrough they are the same
 
-the format is as follows
+the format for RGB ANSI is as follows
 
 bold          Foreground   Background
 |_____|     |____________|____________|
 \033[1m \033[38;2;{R:G:B};48;2;{R:G:B}m
-
 """
 
 team_col_away = {
@@ -86,6 +88,10 @@ team_col_home = {
 }
 
 
+def team_schedule(url):
+    pass
+
+
 """
 This is to print a single game line
     @param  away        the name of the away team
@@ -100,6 +106,12 @@ def print_game(away, home, game_time, tv_network):
     home = team_col_home[home] + home.center(15) + Style.RESET_ALL
     if game_time == "LIVE":
         game_time = Fore.RED + "  ● LIVE  " + Style.RESET_ALL
+    elif len(game_time) > 8:
+        game_time = Fore.GREEN + game_time.split(" ")[0] + "-" +\
+                                     game_time.split(" ")[1] + Fore.RED +\
+                                     game_time.split(" ")[2] + "-" +\
+                                     game_time.split(" ")[3] + Style.RESET_ALL
+        game_time = ''.join(game_time)
     else:
         game_time = game_time.center(10) + Style.RESET_ALL
     if len(tv_network) > 5:
@@ -114,7 +126,6 @@ def print_game(away, home, game_time, tv_network):
 """
 This is to collect the information for all the games in a given week
 The ESPN webpage is structured like this
-
 |------Day-----|    |-----Games-----|    |-Day/Title-|     |----Data----|
 <ScheduleTables> -> <ResponsiveTable> -> <Table_Title>
                                       -> <Table__TBODY> -> <-events__col-->
@@ -124,7 +135,6 @@ The ESPN webpage is structured like this
 There is a different ResponsiveTable depending on wheater or the game finished
 or nor. events_col has the away team, colspan_col has the home team, date_col
 has the time, broadcast__col has the tv_network
-
     @param  url   the espn url to get the game details
 """
 
@@ -148,7 +158,6 @@ def week_schedule(url):
             for single_game in games.find_class("Table__TR--sm"):
                 away_team = single_game.find_class("events__col")[0].\
                                         find_class("AnchorLink")[1].text_content()
-
                 home_team = single_game.find_class("colspan__col")[0].\
                                         find_class("AnchorLink")[1].text_content()
                 try:
@@ -160,7 +169,6 @@ def week_schedule(url):
                                                 find_class("AnchorLink")[0].text_content()
                 except IndexError:
                     game_or_time = "LIVE"
-
                 try:
                     tv_net = single_game.find_class("broadcast__col")[0].\
                                          find_class("network-name")[0].text_content()
@@ -178,7 +186,6 @@ def week_schedule(url):
                                text_content()
                         except IndexError:
                             tv_net = ""
-
                 series_lead = single_game.find_class("events__col")[0].\
                                           find_class("gameNote")[0].text_content()
                 print_game(away_team, home_team, game_or_time, tv_net)
@@ -195,6 +202,7 @@ def test_teams(time, network):
         print_game(team, team, time, network)
     print('\n\n')
     exit(0)
+
 
 if __name__ == "__main__":
     base_url = "https://www.espn.com/nba/schedule"
@@ -220,4 +228,3 @@ if __name__ == "__main__":
                 week_schedule(url)
             case 4:
                 exit(0)
-        
