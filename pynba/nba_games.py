@@ -198,22 +198,35 @@ if __name__ == "__main__":
         help="enter two relative week number and get all games between them"
     )
 
+    arguments.add_argument(
+        "-e",
+        "--experiment",
+        action="store_true",
+        help="instead of selecting from the preset leagues type a league" +
+            " and see if it works"
+    )
+
     flags = arguments.parse_args()
     today = datetime.datetime.now()
 
-    match flags.league[0].upper():
-        case "NBA":
-            base_url = "https://www.espn.com/nba/schedule"
-            team_col = team_col_NBA
-        case "NFL":
-            base_url = "https://www.espn.com/nfl/schedule"
-            team_col = team_col_NFL
-        case "NHL":
-            base_url = "https://www.espn.com/nhl/schedule"
-            team_col = team_col_NHL
-        case "MLB":
-            base_url = "https://www.espn.com/mlb/schedule"
-            team_col = team_col_MLB
+    if flags.experiment:
+        base_url = "https://www.espn.com/" + flags.league[0].lower() +\
+                   "/schedule"
+        team_col = team_col_NBA
+    else:
+        match flags.league[0].upper():
+            case "NBA":
+                base_url = "https://www.espn.com/nba/schedule"
+                team_col = team_col_NBA
+            case "NFL":
+                base_url = "https://www.espn.com/nfl/schedule"
+                team_col = team_col_NFL
+            case "NHL":
+                base_url = "https://www.espn.com/nhl/schedule"
+                team_col = team_col_NHL
+            case "MLB":
+                base_url = "https://www.espn.com/mlb/schedule"
+                team_col = team_col_MLB
 
     if flags.test:
         test_teams(team_col)
