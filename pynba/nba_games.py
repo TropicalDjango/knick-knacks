@@ -232,6 +232,7 @@ if __name__ == "__main__":
         test_teams(team_col)
         exit(0)
 
+    index = 0
     while flags.interactive:
         print("Select an option from below".center(54, "_"))
         print("1:{}\n2:{}\n3:{}\n4:{}\n".format(options[0], options[1],
@@ -240,13 +241,15 @@ if __name__ == "__main__":
         run(["clear"])
         match user_input:
             case 1:
-                get_selected_week(0, base_url)
+                index = 0
             case 2:
-                get_selected_week(-1, base_url)
+                index -= 1
             case 3:
-                get_selected_week(1, base_url)
+                index += 1
             case 4:
                 exit(0)
+        get_selected_week(index, base_url)
+
     if flags.range is not None:
         for ii in range(flags.range[0], flags.range[1] + 1):
             get_selected_week(ii, base_url)

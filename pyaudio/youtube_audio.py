@@ -27,10 +27,10 @@ ydl_opts = {
 
 
 def bash_filename(file_name):
-    file_name = "\ ".join(file_name.split(" "))
-    file_name = "\(".join(file_name.split("("))
-    file_name = "\)".join(file_name.split(")"))
-    file_name = "\&".join(file_name.split("&"))
+    file_name = "\\ ".join(file_name.split(" "))
+    file_name = "\\(".join(file_name.split("("))
+    file_name = "\\)".join(file_name.split(")"))
+    file_name = "\\&".join(file_name.split("&"))
     file_name = "\\'".join(file_name.split("'"))
     file_name = '\\"'.join(file_name.split('"'))
     return file_name
@@ -57,7 +57,7 @@ def search(arg):
         try:
             ydl.get(arg)
         except:
-            video = ydl.extract_info(f"ytsearch:{arg}", download=False)['entries'][0]
+            video = ydl.extract_info(f"ytsearch:{arg}", download=False)['entries']
         else:
             video = ydl.extract_info(arg, download=False)
     return video
@@ -74,7 +74,7 @@ def search_results(arg):
           .format(video_title, video_thumbnail, video_url))
 
     usr = input(Style.RESET_ALL + "Would you like to download Audio " +
-                                    "(y/N/[r]ename): ")
+                                  "(y/N/[r]ename): ")
     if usr.lower() == "y" or usr.lower() == "r":
         with youtube_dl.YoutubeDL(ydl_opts) as ydl:
             ydl.download(video_url)
@@ -96,21 +96,21 @@ if __name__ == "__main__":
         print("1: Download from URL \n2: Search for music" +
               "\n3: List of all music \n4: Rename file \n5: Exit")
         arg = input("-> ")
-        if arg == '1':
-            print("Enter URL".center(40, "_"))
-            url = input("-> ")
-            download_yt_audio(url)
-        elif arg == '2':
-            print("Enter Search Term".center(40, "_"))
-            term = input("-> ")
-            search_results(term)
-        elif arg == '3':
-            list_downloads()
-        elif arg == '4':
-            list_downloads()
-            video_title = input("old file name: ")
-            new_title = input("rename to: ")
-            rename_file(video_title, new_title)
-        elif arg == '5':
-            exit()
-
+        match arg:
+            case '1':
+                print("Enter URL".center(40, "_"))
+                url = input("-> ")
+                download_yt_audio(url)
+            case '2':
+                print("Enter Search Term".center(40, "_"))
+                term = input("-> ")
+                search_results(term)
+            case '3':
+                list_downloads()
+            case '4':
+                list_downloads()
+                video_title = input("old file name: ")
+                new_title = input("rename to: ")
+                rename_file(video_title, new_title)
+            case '5':
+                exit()
