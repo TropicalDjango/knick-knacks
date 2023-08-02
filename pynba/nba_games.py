@@ -118,8 +118,7 @@ def get_week_schedule(url):
             day = day[0].text_content()
         else:
             day = day.text_content()
-        print('')
-        print(day.center(54, "_"))
+        print('\n\033[1m' + day.center(54, "_"))
         for table in element.find_class("ResponsiveTable"):
             games = table.find_class("Table__TBODY")[0]
             for single_game in games.find_class("Table__TR--sm"):
