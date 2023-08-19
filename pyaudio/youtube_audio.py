@@ -65,19 +65,22 @@ def search(arg):
 
 def search_results(arg):
     ii = 0
-    video = search(arg)
-    video_url = video['webpage_url']
-    video_title = video['title']
-    video_thumbnail = video['thumbnail']
-
-    print(Fore.BLUE + str(ii) + " Title: {} \nThumbnail: {} \nURL: {}"
-          .format(video_title, video_thumbnail, video_url))
+    video_title = []
+    video_url = []
+    video_thumbnail = []
+    video_list = search(arg)
+    for video in video_list:
+        video_url.append(video['webpage_url'])
+        video_title.append(video['title'])
+        video_thumbnail.append(video['thumbnail'])
+        print(Fore.BLUE + str(ii) + ": Title: {} \nThumbnail: {} \nURL: {}\n"
+              .format(video_title[ii], video_thumbnail[ii], video_url[ii]))
+        ii += 1
 
     usr = input(Style.RESET_ALL + "Would you like to download Audio " +
-                                  "(y/N/[r]ename): ")
-    if usr.lower() == "y" or usr.lower() == "r":
-        with youtube_dl.YoutubeDL(ydl_opts) as ydl:
-            ydl.download(video_url)
+                                  "([i]/N/[r]ename): ")
+    if usr.isdigit() or usr.lower() == "r":
+        download_yt_audio(video_url[int(usr)])
         if usr.lower() == "r":
             new_title = input("Rename to: ")
             rename_file(video_title, new_title)
