@@ -15,13 +15,18 @@ def progress_hook(d):
 
 ydl_opts = {
     'format': 'bestaudio',
-    'continue': True,
     'progress_hooks': [progress_hook],
-    'outtmpl': 'downloads/%(title)s',
+    'writethumbnail': True,
+    'outtmpl': '~/Music/%(title)s',
     'postprocessors': [{
         'key': 'FFmpegExtractAudio',
         'preferredcodec': 'mp3',
         'preferredquality': '192',
+    }, {
+        'key': 'EmbedThumbnail',
+    }, {
+        'key': 'FFmpegMetadata',
+        'add_metadata': True,
     }],
 }
 
@@ -39,14 +44,15 @@ def bash_filename(file_name):
 def rename_file(old_title, new_title):
     file_name = bash_filename(old_title + ".mp3")
     new_file_name = bash_filename(new_title + ".mp3")
-    cmd_string = "mv downloads/{} downloads/{}".format(file_name,
+    cmd_string = "mv ~/Music/{} ~/Music/{}".format(file_name,
                                                        new_file_name)
     print(cmd_string)
     subprocess.run(cmd_string, shell=True)
 
 
 def list_downloads():
-    cmd_str = "exa -l downloads | awk '{$1=$2=$3=$4=$5=$6=False; print $0}'"
+    cmd_str = "exa -1 --icons ~/Music/"
+    print('\n')
     subprocess.run(cmd_str, shell=True)
     print('\n')
     return
