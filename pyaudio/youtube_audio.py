@@ -2,15 +2,18 @@
 
 from __future__ import unicode_literals
 import yt_dlp as youtube_dl
-import readline
+from requests import get
 import subprocess
 from colorama import Fore, Style
+
+music_addr = "~/Music/"
+
 
 def progress_hook(d):
     if d['status'] == 'downloading':
         print("...")
     if d['status'] == 'finished':
-        print('\n' + Fore.GREEN + 'Done'.center(20,"_") + Style.RESET_ALL)
+        print('\n' + Fore.GREEN + 'Done'.center(20, "_") + Style.RESET_ALL)
 
 
 ydl_opts = {
@@ -44,8 +47,8 @@ def bash_filename(file_name):
 def rename_file(old_title, new_title):
     file_name = bash_filename(old_title + ".mp3")
     new_file_name = bash_filename(new_title + ".mp3")
-    cmd_string = "mv ~/Music/{} ~/Music/{}".format(file_name,
-                                                       new_file_name)
+    cmd_string = "mv {}{} {}{}".format(music_addr, file_name,
+                                       music_addr, new_file_name)
     print(cmd_string)
     subprocess.run(cmd_string, shell=True)
 
@@ -61,9 +64,9 @@ def list_downloads():
 def search(arg):
     with youtube_dl.YoutubeDL(ydl_opts) as ydl:
         try:
-            ydl.get(arg)
+            get(arg)
         except:
-            video = ydl.extract_info(f"ytsearch:{arg}", download=False)['entries']
+            video = ydl.extract_info(f"ytsearch3:{arg}", download=False).get('entries')
         else:
             video = ydl.extract_info(arg, download=False)
     return video
@@ -79,17 +82,14 @@ def search_results(arg):
         video_url.append(video['webpage_url'])
         video_title.append(video['title'])
         video_thumbnail.append(video['thumbnail'])
-        print(Fore.BLUE + str(ii) + ": Title: {} \nThumbnail: {} \nURL: {}\n"
+        print(Fore.BLUE + str(ii+1) + ": Title: {} \nThumbnail: {} \nURL: {}\n"
               .format(video_title[ii], video_thumbnail[ii], video_url[ii]))
         ii += 1
 
     usr = input(Style.RESET_ALL + "Would you like to download Audio " +
-                                  "([i]/N/[r]ename): ")
-    if usr.isdigit() or usr.lower() == "r":
-        download_yt_audio(video_url[int(usr)])
-        if usr.lower() == "r":
-            new_title = input("Rename to: ")
-            rename_file(video_title, new_title)
+                                  "([i]/N): ")
+    if usr.isdigit():
+        download_yt_audio(video_url[int(usr)-1])
     else:
         return
 
